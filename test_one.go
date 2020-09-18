@@ -62,7 +62,9 @@ func TestOne(
 
 		go func() {
 			err := cmd.Wait()
-			waitChan <- err
+			if err != nil && ctx.Err() == nil {
+				waitChan <- err
+			}
 			close(waitChan)
 		}()
 
@@ -70,7 +72,9 @@ func TestOne(
 		case <-ctx.Done():
 			return
 		case ans := <-waitChan:
-			errChan <- ans
+			if ctx.Err() == nil {
+				errChan <- ans
+			}
 		}
 	}()
 
