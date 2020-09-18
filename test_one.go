@@ -41,10 +41,10 @@ func TestOne(
 	ctx, cancel := context.WithCancel(context.Background())
 	errChan, memoryMonitorChan := make(chan error), make(chan bool)
 	defer func() {
+		cancel()
+
 		close(errChan)
 		close(memoryMonitorChan)
-
-		cancel()
 	}()
 
 	cmd.Stdin, cmd.Stdout = in, out
